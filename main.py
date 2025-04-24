@@ -9,10 +9,13 @@ from langchain.prompts import ChatPromptTemplate
 # Function to enhance the prompt using Groq
 def make_prompt(simple_prompt, style, color, size, placement):
     """Enhance a simple prompt into a highly detailed and structured one using ChatGroq."""
+    groq_api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
     llm = ChatGroq(
+        api_key=groq_api_key,
         model="llama-3.1-8b-instant",
         temperature=0.7
     )
+
 
     # Define the prompt enhancement template
     system_message = (
@@ -52,7 +55,10 @@ def generate_tattoo(prompt):
     """
     try:
         # Initialize the Gemini API client with the API key from environment variables
-        client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+        
+        api_key = os.getenv("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
+        client = genai.Client(api_key=api_key)
+
         model = "gemini-2.0-flash-exp-image-generation"
         
         # Prepare the content with the constructed prompt
